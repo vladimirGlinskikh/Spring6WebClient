@@ -14,6 +14,10 @@ public class BeerClientImpl implements BeerClient {
     public static final String BEER_PATH = "/api/v3/beer";
     private final WebClient webClient;
 
+    public BeerClientImpl(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.build();
+    }
+
     @Override
     public Flux<BeerDTO> listBeerDTO() {
         return webClient.get().uri(BEER_PATH)
@@ -24,11 +28,6 @@ public class BeerClientImpl implements BeerClient {
     public Flux<JsonNode> listBeersJsonNode() {
         return webClient.get().uri(BEER_PATH)
                 .retrieve().bodyToFlux(JsonNode.class);
-    }
-
-    public BeerClientImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder
-                .baseUrl("http://localhost:8080").build();
     }
 
     @Override
