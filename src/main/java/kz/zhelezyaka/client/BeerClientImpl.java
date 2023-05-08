@@ -1,16 +1,23 @@
 package kz.zhelezyaka.client;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 import java.util.Map;
+import java.util.concurrent.Flow;
 
 @Service
 public class BeerClientImpl implements BeerClient {
     public static final String BEER_PATH = "/api/v3/beer";
     private final WebClient webClient;
 
+    @Override
+    public Flux<JsonNode> listBeersJsonNode() {
+        return webClient.get().uri(BEER_PATH, JsonNode.class)
+                .retrieve().bodyToFlux(JsonNode.class);
+    }
 
     public BeerClientImpl(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
