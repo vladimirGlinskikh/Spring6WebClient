@@ -1,6 +1,7 @@
 package kz.zhelezyaka.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import kz.zhelezyaka.model.BeerDTO;
 import reactor.core.publisher.Flux;
 
 import java.util.Map;
@@ -12,4 +13,6 @@ public interface BeerClient {
     Flux<Map> listBeerMap();
 
     Flux<JsonNode> listBeersJsonNode();
+
+    Flux<BeerDTO> listBeerDTO();
 }
