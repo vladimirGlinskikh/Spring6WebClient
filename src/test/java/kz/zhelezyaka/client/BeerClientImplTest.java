@@ -1,11 +1,13 @@
 package kz.zhelezyaka.client;
 
+import kz.zhelezyaka.model.BeerDTO;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -22,6 +24,23 @@ class BeerClientImplTest {
     @BeforeEach
     void setUp() {
         atomicBoolean = new AtomicBoolean(false);
+    }
+
+    @Test
+    void testCreateBeer() {
+        BeerDTO newDTO = BeerDTO.builder()
+                .price(new BigDecimal("12.90"))
+                .beerName("Derbes")
+                .beerStyle("ALE")
+                .quantityOnHand(456)
+                .upc("12389")
+                .build();
+        client.createBeer(newDTO)
+                .subscribe(dto -> {
+                    System.out.println(dto.toString());
+                    atomicBoolean.set(true);
+                });
+        await().untilTrue(atomicBoolean);
     }
 
     @Test
