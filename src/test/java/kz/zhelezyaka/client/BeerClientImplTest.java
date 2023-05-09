@@ -1,11 +1,12 @@
 package kz.zhelezyaka.client;
 
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.awaitility.Awaitility.await;
@@ -21,6 +22,16 @@ class BeerClientImplTest {
     @BeforeEach
     void setUp() {
         atomicBoolean = new AtomicBoolean(false);
+    }
+
+    @Test
+    void testGetBeerByBeerStyle() {
+        client.getBeerByBeerStyle("ALE")
+                .subscribe(dto -> {
+                    System.out.println(dto.toString());
+                    atomicBoolean.set(true);
+                });
+        await().untilTrue(atomicBoolean);
     }
 
     @Test
