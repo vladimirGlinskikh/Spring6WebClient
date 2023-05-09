@@ -27,6 +27,20 @@ class BeerClientImplTest {
     }
 
     @Test
+    void testUpdateBeer() {
+        final String NAME = "New Name Beer";
+        client.listBeerDTO()
+                .next()
+                .doOnNext(beerDTO -> beerDTO.setBeerName(NAME))
+                .flatMap(dto -> client.updateBeer(dto))
+                .subscribe(byIdDTO -> {
+                    System.out.println(byIdDTO.toString());
+                    atomicBoolean.set(true);
+                });
+        await().untilTrue(atomicBoolean);
+    }
+
+    @Test
     void testCreateBeer() {
         BeerDTO newDTO = BeerDTO.builder()
                 .price(new BigDecimal("12.90"))
