@@ -1,17 +1,16 @@
 package kz.zhelezyaka.client;
 
 import kz.zhelezyaka.model.BeerDTO;
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BeerClientImplTest {
@@ -25,6 +24,33 @@ class BeerClientImplTest {
     void setUp() {
         atomicBoolean = new AtomicBoolean(false);
     }
+
+    @Test
+    void testDeleteBeer() {
+        client.listBeerDTO()
+                .next()
+                .flatMap(dto -> client.deleteBeer(dto))
+                .doOnSuccess(mt -> atomicBoolean.set(true))
+                .subscribe();
+        await().untilTrue(atomicBoolean);
+    }
+
+    @Test
+    void testPatchBeer() {
+        final String NAME = "New Name Beer";
+
+        client.listBeerDTO()
+                .next()
+                .map(beerDTO ->
+                        BeerDTO.builder().beerName(NAME).id(beerDTO.getId()).build())
+                .flatMap(dto -> client.patchBeer(dto))
+                .subscribe(byIdDTO -> {
+                    System.out.println(byIdDTO.toString());
+                    atomicBoolean.set(true);
+                });
+        await().untilTrue(atomicBoolean);
+    }
+
 
     @Test
     void testUpdateBeer() {
