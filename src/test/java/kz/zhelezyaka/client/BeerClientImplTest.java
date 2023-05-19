@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest
 class BeerClientImplTest {
